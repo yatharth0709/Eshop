@@ -1,0 +1,79 @@
+keyid="rzp_test_ZpNruv2vDpktvI"
+keysecret="R7b4FUV7xebuzuMEWVXQWGky"
+
+import razorpay
+print(order)
+
+
+{'id': 'order_HAJ2cBOkBvYtza', 'entity': 'order', 'amount': 10000, 'amount_paid': 0, 'amount_due': 10000, 'currency': 'INR', 'receipt': 'eshop', 'offer_id': None, 'status': 'created', 'attempts': 0, 'notes': {'name': 'yb', 'payment_for': 'orders'}, 'created_at': 1620915331}
+
+        keyid="rzp_test_ZpNruv2vDpktvI"
+        keysecret="R7b4FUV7xebuzuMEWVXQWGky"
+        client = razorpay.Client(auth=(keyid,keysecret))
+
+        data={
+
+        'amount' : 100*100, #since in paisa
+        'currency':"INR",
+        'receipt':"eshop",
+        'notes': {
+            "name":"yb",
+            "payment_for":"orders"
+        },
+        'payment_capture':'1'
+        }
+
+        orders=client.order.create(data=data)
+
+
+
+
+
+
+  <button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+var options = {
+    "key": "rzp_test_ZpNruv2vDpktvI", // Enter the Key ID generated from the Dashboard
+    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{orders.get('id')}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        console.log(
+          {  
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id:response.razorpay_order_id,
+              razorpay_signature:response.razorpay_signature
+            }
+            );
+        
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9999999999"
+    },
+  
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>

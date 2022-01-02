@@ -1,0 +1,74 @@
+{% extends 'base.html'%}
+
+{% block content%}
+
+{% load cart%}
+<!-- load template file -->
+<div class="row">
+  <div class="container-fluid mt-5 ">
+
+    <div class="col-lg-4 mx-auto">
+      <div class="list-group mb-3 " style="width:70%;">
+        <a href="/" class="list-group-item list-group-item-action mb-4" style="font-size: 20px; color:whitesmoke; background-color:lightslategray;">All Products</a>
+        {% for cat in Category%}
+        <a href="/?category={{cat.id}}" class="list-group-item list-group-item-action mb-4" style="font-size: 20px; color:whitesmoke; background-color:lightslategray;">{{cat.name}}</a>
+        {% endfor%}
+      </div>
+    </div>
+    <div id="products" class="col-lg-8 mx-auto">
+      <div class="row mx-auto">
+        {% for product in products%}
+        <div class="card mx-auto mb-5" id={{product.id}} style="width: 25rem;">
+          <img src="{{product.image.url}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+            <p class="card-text">{{product.description}}</p>
+            <p class="card-text"><b>{{product.price|currency}}</b></p>
+            <!-- {{product | isincart:request.session.cart}} -->
+            <!-- space not allowed in between letters and colon else error -->
+            <!-- product and cart is also passed in isincart this is the way to call filter -->
+  
+          </div>
+          <div class="card-footer p-0 no-gutters">
+            {% if product|isincart:request.session.cart %}
+            <div class="row no-gutters">
+  
+              <form action="/#{{product.id}}" class="col-2 px-2" method="post">
+                {% csrf_token %}
+               <input hidden type="text" name='product' value="{{product.id}}">
+               <input hidden type="text" name='remove' value="True">
+               <input type="submit" value="-" class="btn btn-block btn-secondary px-3">
+              </form> 
+                
+              
+              
+              <div class="text-center col mt-2">{{product|cartquant:request.session.cart}} in your cart</div>
+              
+              
+             <form action="/#{{product.id}}" class="col-2 px-2"method="post">
+              {% csrf_token %}
+             <input hidden type="text" name='product' value="{{product.id}}">
+             <input type="submit" value="+" class="btn btn-block btn-secondary px-3">
+            </form> 
+             
+            </div>
+  
+            {% else %}
+            <form action="/#{{product.id}}" method="POST" class="btn-block">
+              {% csrf_token %}
+              <input hidden type="text" name='product' value="{{product.id}}">
+              <input type="submit" class="btn btn-light border btn-sm form-control" value="ADD TO CART">
+            </form>
+            {% endif %}
+          </div>
+  
+        </div>
+        {% endfor %}
+      </div>
+  
+    </div>
+  
+  </div>
+ </div>
+</div>
+{% endblock %}
